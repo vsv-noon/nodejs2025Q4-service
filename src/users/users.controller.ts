@@ -20,8 +20,8 @@ export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @Post()
-  async create(@Body() dto: CreateUserDto): Promise<Partial<User>> {
-    return this.userService.create(dto);
+  async create(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
+    return this.userService.create(createUserDto);
   }
 
   @Get()
@@ -47,9 +47,9 @@ export class UsersController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
-    @Body() dto: UpdatePasswordDto,
+    @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<Partial<User>> {
-    return this.userService.update(id, dto);
+    return this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')
