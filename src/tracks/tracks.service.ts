@@ -57,4 +57,20 @@ export class TracksService {
 
     this.tracks = this.tracks.filter((track) => track.id !== id);
   }
+
+  removeArtistId(artistId: string): void {
+    this.tracks.forEach((track) => {
+      if (track.artistId === artistId) {
+        track.artistId = null;
+      }
+    });
+  }
+
+  removeAlbumId(albumId: string): void {
+    this.tracks.forEach((track) => {
+      if (track.albumId === albumId) {
+        track.albumId = null;
+      }
+    });
+  }
 }
