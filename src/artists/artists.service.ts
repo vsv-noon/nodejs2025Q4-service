@@ -1,12 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  forwardRef,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './interfaces/artist.interface';
+import { AlbumsService } from 'src/albums/albums.service';
 
 @Injectable()
 export class ArtistsService {
   private artists: Artist[] = [];
+
+  constructor(
+    @Inject(forwardRef(() => AlbumsService))
+    private albumService: AlbumsService,
+  ) {}
 
   create(createArtistDto: CreateArtistDto) {
     const artist = {
@@ -53,6 +64,7 @@ export class ArtistsService {
       throw new NotFoundException('Artist not found');
     }
 
+    this.albumService.removeArtistId(id);
     this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }
