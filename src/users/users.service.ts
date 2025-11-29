@@ -3,34 +3,20 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
 import { v4 as uuidv4 } from 'uuid';
+import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces';
+import { User } from './interfaces/user.interface';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   private users: User[] = [];
 
-  findAll(): User[] {
-    return this.users;
-  }
-
-  findById(id: string): User {
-    const user = this.users.find((user) => user.id === id);
-
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-
-    return user;
-  }
-
-  create(dto: CreateUserDto): Partial<User> {
+  create(createUserDto: CreateUserDto): Partial<User> {
     const user: User = {
       id: uuidv4(),
-      login: dto.login,
-      password: dto.password,
+      login: createUserDto.login,
+      password: createUserDto.password,
       version: 1,
       createdAt: Date.now(),
       updatedAt: Date.now(),
@@ -43,18 +29,32 @@ export class UserService {
     return rest;
   }
 
-  update(id: string, dto: UpdatePasswordDto): Partial<User> {
+  findAll(): User[] {
+    return this.users;
+  }
+
+  findOne(id: string): User {
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    if (dto.oldPassword !== user.password) {
+    return user;
+  }
+
+  update(id: string, updatePasswordDto: UpdatePasswordDto): Partial<User> {
+    const user = this.users.find((user) => user.id === id);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    if (updatePasswordDto.oldPassword !== user.password) {
       throw new ForbiddenException('Old Password is wrong');
     }
 
-    user.password = dto.newPassword;
+    user.password = updatePasswordDto.newPassword;
     user.updatedAt = Date.now();
     user.version += 1;
 
@@ -62,7 +62,7 @@ export class UserService {
     return rest;
   }
 
-  delete(id: string): void {
+  remove(id: string): void {
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {

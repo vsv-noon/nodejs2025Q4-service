@@ -10,14 +10,19 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { UserService } from './user.service';
+import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces';
+import { User } from './interfaces/user.interface';
 
 @Controller('user')
-export class UserController {
-  constructor(private readonly userService: UserService) {}
+export class UsersController {
+  constructor(private readonly userService: UsersService) {}
+
+  @Post()
+  async create(@Body() dto: CreateUserDto): Promise<Partial<User>> {
+    return this.userService.create(dto);
+  }
 
   @Get()
   async findAll(): Promise<User[]> {
@@ -25,19 +30,14 @@ export class UserController {
   }
 
   @Get(':id')
-  async findById(
+  async findOne(
     @Param(
       'id',
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
   ): Promise<User> {
-    return this.userService.findById(id);
-  }
-
-  @Post()
-  async create(@Body() dto: CreateUserDto): Promise<Partial<User>> {
-    return this.userService.create(dto);
+    return this.userService.findOne(id);
   }
 
   @Put(':id')
@@ -54,13 +54,13 @@ export class UserController {
 
   @Delete(':id')
   @HttpCode(204)
-  async delete(
+  async remove(
     @Param(
       'id',
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
   ) {
-    this.userService.delete(id);
+    this.userService.remove(id);
   }
 }
