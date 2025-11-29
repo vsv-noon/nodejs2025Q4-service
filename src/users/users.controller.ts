@@ -60,7 +60,7 @@ export class UsersController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
-  ) {
+  ): Promise<void> {
     this.userService.remove(id);
   }
 }
