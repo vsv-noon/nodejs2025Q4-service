@@ -14,22 +14,49 @@ import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
+import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Track')
 @Controller('track')
 export class TracksController {
   constructor(private readonly tracksService: TracksService) {}
 
   @Post()
+  @ApiOperation({
+    summary: 'Add new track',
+    description: 'Add new track information',
+  })
+  @ApiResponse({ status: 201, description: 'The track has been created.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. body does not contain required fields',
+  })
   async create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.tracksService.create(createTrackDto);
   }
 
   @Get()
+  @ApiOperation({
+    summary: 'Get tracks list',
+    description: 'Gets all library tracks list',
+  })
+  @ApiResponse({ status: 200, description: 'Successful operation' })
   async findAll(): Promise<Track[]> {
     return this.tracksService.findAll();
   }
 
   @Get(':id')
+  @ApiOperation({
+    summary: 'Get single track by id',
+    description: 'Get single track by id',
+  })
+  @ApiParam({ name: 'id', type: String })
+  @ApiResponse({ status: 200, description: 'Successful operation' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. trackId is invalid (not uuid)',
+  })
+  @ApiResponse({ status: 404, description: 'Track not found' })
   async findOne(
     @Param(
       'id',
@@ -41,6 +68,19 @@ export class TracksController {
   }
 
   @Put(':id')
+  @ApiOperation({
+    summary: 'Update track information',
+    description: 'Update library track information by UUID',
+  })
+  @ApiResponse({ status: 200, description: 'The track has been updated.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. trackId is invalid (not uuid)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Track was not found.',
+  })
   async update(
     @Param(
       'id',
@@ -53,6 +93,19 @@ export class TracksController {
   }
 
   @Delete(':id')
+  @ApiOperation({
+    summary: 'Delete track',
+    description: 'Delete track',
+  })
+  @ApiResponse({ status: 204, description: 'Deleted successfully' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. trackId is invalid (not uuid)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Track was not found.',
+  })
   @HttpCode(204)
   async remove(
     @Param(
