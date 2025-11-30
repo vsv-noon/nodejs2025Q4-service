@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ForbiddenException,
   Injectable,
@@ -24,7 +25,6 @@ export class UsersService {
 
     this.users.push(user);
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...rest } = user;
 
     return rest;
@@ -59,7 +59,6 @@ export class UsersService {
     user.updatedAt = Date.now();
     user.version += 1;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...rest } = user;
     return rest;
   }
