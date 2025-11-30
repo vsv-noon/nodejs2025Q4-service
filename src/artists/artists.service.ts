@@ -10,6 +10,7 @@ import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './interfaces/artist.interface';
 import { AlbumsService } from 'src/albums/albums.service';
 import { TracksService } from 'src/tracks/tracks.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class ArtistsService {
@@ -21,6 +22,9 @@ export class ArtistsService {
 
     @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
+
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   create(createArtistDto: CreateArtistDto) {
@@ -70,6 +74,15 @@ export class ArtistsService {
 
     this.albumService.removeArtistId(id);
     this.tracksService.removeArtistId(id);
+
+    const favorite = this.favoritesService
+      .findAll()
+      .artists.find((artist) => artist.id === id);
+
+    if (favorite) {
+      this.favoritesService.removeArtist(id);
+    }
+
     this.artists = this.artists.filter((artist) => artist.id !== id);
   }
 }
