@@ -8,7 +8,9 @@ import {
 import { AlbumsService } from 'src/albums/albums.service';
 import { ArtistsService } from 'src/artists/artists.service';
 import { TracksService } from 'src/tracks/tracks.service';
+import { Album } from 'src/albums/interfaces/album.interface';
 import { Artist } from 'src/artists/interfaces/artist.interface';
+import { Track } from 'src/tracks/interfaces/track.interface';
 
 @Injectable()
 export class FavoritesService {
@@ -41,6 +43,28 @@ export class FavoritesService {
     return { albums, artists, tracks };
   }
 
+  addAlbum(id: string): Album {
+    const album = this.albumsService.findAll().find((album) => album.id === id);
+
+    if (!album) {
+      throw new UnprocessableEntityException('Album not found');
+    }
+
+    this.favAlbums.push(album.id);
+
+    return album;
+  }
+
+  removeAlbum(id: string): void {
+    const albumIdx = this.favAlbums.findIndex((idx) => idx === id);
+
+    if (albumIdx === -1) {
+      throw new NotFoundException('Album not found');
+    }
+
+    this.favAlbums.splice(albumIdx, 1);
+  }
+
   addArtist(id: string): Artist {
     const artist = this.artistsService
       .findAll()
@@ -63,5 +87,27 @@ export class FavoritesService {
     }
 
     this.favArtists.splice(artistIdx, 1);
+  }
+
+  addTrack(id: string): Track {
+    const track = this.tracksService.findAll().find((track) => track.id === id);
+
+    if (!track) {
+      throw new UnprocessableEntityException('Track not found');
+    }
+
+    this.favTracks.push(track.id);
+
+    return track;
+  }
+
+  removeTrack(id: string): void {
+    const trackIdx = this.favTracks.findIndex((idx) => idx === id);
+
+    if (trackIdx === -1) {
+      throw new NotFoundException('Track not found');
+    }
+
+    this.favTracks.splice(trackIdx, 1);
   }
 }

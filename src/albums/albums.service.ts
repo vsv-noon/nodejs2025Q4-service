@@ -9,6 +9,7 @@ import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './interfaces/album.interface';
 import { TracksService } from 'src/tracks/tracks.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class AlbumsService {
@@ -17,6 +18,9 @@ export class AlbumsService {
   constructor(
     @Inject(forwardRef(() => TracksService))
     private readonly tracksService: TracksService,
+
+    @Inject(forwardRef(() => FavoritesService))
+    private readonly favoritesService: FavoritesService,
   ) {}
 
   create(createAlbumDto: CreateAlbumDto): Album {
@@ -66,6 +70,14 @@ export class AlbumsService {
     }
 
     this.tracksService.removeAlbumId(id);
+
+    const favorite = this.favoritesService
+      .findAll()
+      .albums.find((album) => album.id === id);
+
+    if (favorite) {
+      this.favoritesService.removeAlbum(id);
+    }
 
     this.albums = this.albums.filter((album) => album.id !== id);
   }
