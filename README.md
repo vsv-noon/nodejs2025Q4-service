@@ -8,8 +8,14 @@
 ## Downloading
 
 ```
+git clone -b rest-service https://github.com/vsv-noon/nodejs2025Q4-service.git
+```
+OR
+```
 git clone {repository URL}
 ```
+
+### switch to branch `rest-service`
 
 ## Installing NPM modules
 
@@ -23,11 +29,17 @@ npm install
 npm start
 ```
 
-After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+#### You can rename `.env.example` to `.env` and change the port used (`PORT=4000` as default)
+
+#### After starting the app on port (4000 as default) you can open in your browser OpenAPI documentation by typing **http://localhost:4000/doc/**.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## Testing
+
+Before running tests, you need to run the application.
+```
+npm start
+```
 
 After application running open new terminal and enter:
 
