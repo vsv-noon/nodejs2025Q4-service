@@ -1,0 +1,15 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: rest_service_app
+    restart: always
+    ports:
+      - ${PORT:-4000}:4000
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src:ro
+      - ./package.json:/app/package.json
+
