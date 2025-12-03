@@ -21,15 +21,23 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.db
-    container_name: home-library-db
-    restart: always
-    ports:
-      - ${POSTGRES_PORT}:${POSTGRES_PORT}
-    env_file:
-      - .env
+    container_name: ${POSTGRES_HOST}    
+    environment:
+      POSTGRES_DB: '${POSTGRES_DB}'
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - postgres_logs:/var/log/postgresql
+    ports:
+      - '${POSTGRES_PORT}:${POSTGRES_PORT}'
+    restart: always
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER:-todoapp} -d ${POSTGRES_DB:-todoapp}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
     networks:
       - home-library-network
 
