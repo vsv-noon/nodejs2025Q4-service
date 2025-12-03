@@ -1,4 +1,3 @@
-
 FROM node:24-alpine
 
 WORKDIR /app
@@ -9,6 +8,7 @@ RUN npm install && \
     npm cache clean --force && \
     rm -rf /root/.npm && \
     rm -rf /tmp/*
+
 COPY . .
 
 EXPOSE 4000
