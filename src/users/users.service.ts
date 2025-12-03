@@ -42,7 +42,7 @@ export class UsersService {
       },
     });
 
-    const { password, ...rest } = user;
+    const { password: _, ...rest } = user;
 
     return {
       ...rest,
@@ -70,32 +70,37 @@ export class UsersService {
     };
   }
 
-  // update(id: string, updatePasswordDto: UpdatePasswordDto): Partial<User> {
-  //   const user = this.users.find((user) => user.id === id);
+  async update(
+    id: string,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<Partial<User>> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
-  //   if (!user) {
-  //     throw new NotFoundException('User not found');
-  //   }
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-  //   if (updatePasswordDto.oldPassword !== user.password) {
-  //     throw new ForbiddenException('Old Password is wrong');
-  //   }
+    if (updatePasswordDto.oldPassword !== user.password) {
+      throw new ForbiddenException('Old Password is wrong');
+    }
 
-  //   user.password = updatePasswordDto.newPassword;
-  //   user.updatedAt = Date.now();
-  //   user.version += 1;
+    const { password: _, version, ...rest } = user;
 
-  //   const { password, ...rest } = user;
-  //   return rest;
-  // }
+    return {
+      ...rest,
+      version: version + 1,
+      createdAt: new Date(rest.createdAt).getTime(),
+      updatedAt: new Date(rest.updatedAt).getTime(),
+    };
+  }
 
-  // remove(id: string): void {
-  //   const user = this.users.find((user) => user.id === id);
+  async remove(id: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
-  //   if (!user) {
-  //     throw new NotFoundException('User not found');
-  //   }
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
 
-  //   this.users = this.users.filter((user) => user.id !== id);
-  // }
+    await this.prisma.user.delete({ where: { id } });
+  }
 }
