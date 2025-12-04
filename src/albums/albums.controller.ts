@@ -32,7 +32,7 @@ export class AlbumsController {
     description: 'Bad request. body does not contain required fields',
   })
   async create(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
-    return this.albumsService.create(createAlbumDto);
+    return await this.albumsService.create(createAlbumDto);
   }
 
   @Get()
@@ -42,7 +42,7 @@ export class AlbumsController {
   })
   @ApiResponse({ status: 200, description: 'Successful operation' })
   async findAll(): Promise<Album[]> {
-    return this.albumsService.findAll();
+    return await this.albumsService.findAll();
   }
 
   @Get(':id')
@@ -61,7 +61,7 @@ export class AlbumsController {
     )
     id: string,
   ): Promise<Album> {
-    return this.albumsService.findOne(id);
+    return await this.albumsService.findOne(id);
   }
 
   @Put(':id')
@@ -86,7 +86,7 @@ export class AlbumsController {
     id: string,
     @Body() updateAlbumDto: UpdateAlbumDto,
   ): Promise<Album> {
-    return this.albumsService.update(id, updateAlbumDto);
+    return await this.albumsService.update(id, updateAlbumDto);
   }
 
   @Delete(':id')
@@ -111,6 +111,6 @@ export class AlbumsController {
     )
     id: string,
   ): Promise<void> {
-    this.albumsService.remove(id);
+    await this.albumsService.remove(id);
   }
 }

@@ -1,32 +1,15 @@
-import {
-  // forwardRef,
-  // Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './interfaces/album.interface';
-// import { TracksService } from 'src/tracks/tracks.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-// import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class AlbumsService {
-  private albums: Album[] = [];
-
-  constructor(
-    private readonly prisma: PrismaService,
-
-    // @Inject(forwardRef(() => TracksService))
-    // private readonly tracksService: TracksService,
-
-    // @Inject(forwardRef(() => FavoritesService))
-    // private readonly favoritesService: FavoritesService,
-  ) {}
+  constructor(private readonly prisma: PrismaService) {}
 
   async create(createAlbumDto: CreateAlbumDto): Promise<Album> {
-    const album = this.prisma.album.create({
+    const album = await this.prisma.album.create({
       data: { ...createAlbumDto },
     });
 
@@ -71,24 +54,6 @@ export class AlbumsService {
       throw new NotFoundException('Album not found');
     }
 
-    // this.tracksService.removeAlbumId(id);
-
-    // const favorite = this.favoritesService
-    //   .findAll()
-    //   .albums.find((album) => album.id === id);
-
-    // if (favorite) {
-    //   this.favoritesService.removeAlbum(id);
-    // }
-
     await this.prisma.album.delete({ where: { id } });
-  }
-
-  removeArtistId(artistId: string): void {
-    this.albums.forEach((album) => {
-      if (album.artistId === artistId) {
-        album.artistId = null;
-      }
-    });
   }
 }
