@@ -13,25 +13,7 @@ import { Prisma } from 'generated/prisma/client';
 
 @Injectable()
 export class UsersService {
-  // private users: User[] = [];
   constructor(private readonly prisma: PrismaService) {}
-
-  // create(createUserDto: CreateUserDto): Partial<User> {
-  //   const user: User = {
-  //     id: uuidv4(),
-  //     login: createUserDto.login,
-  //     password: createUserDto.password,
-  //     version: 1,
-  //     createdAt: Date.now(),
-  //     updatedAt: Date.now(),
-  //   };
-
-  //   this.users.push(user);
-
-  //   const { password, ...rest } = user;
-
-  //   return rest;
-  // }
 
   async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
     const user = await this.prisma.user.create({

@@ -7,12 +7,12 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  Put,
+  // Put,
   HttpCode,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
-import { UpdateAlbumDto } from './dto/update-album.dto';
+// import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './interfaces/album.interface';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -64,30 +64,30 @@ export class AlbumsController {
     return this.albumsService.findOne(id);
   }
 
-  @Put(':id')
-  @ApiOperation({
-    summary: 'Update album information',
-    description: 'Update library album information by UUID',
-  })
-  @ApiResponse({ status: 200, description: 'The album has been updated.' })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad request. albumId is invalid (not uuid)',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Album was not found.',
-  })
-  async update(
-    @Param(
-      'id',
-      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
-    )
-    id: string,
-    @Body() updateAlbumDto: UpdateAlbumDto,
-  ): Promise<Album> {
-    return this.albumsService.update(id, updateAlbumDto);
-  }
+  // @Put(':id')
+  // @ApiOperation({
+  //   summary: 'Update album information',
+  //   description: 'Update library album information by UUID',
+  // })
+  // @ApiResponse({ status: 200, description: 'The album has been updated.' })
+  // @ApiResponse({
+  //   status: 400,
+  //   description: 'Bad request. albumId is invalid (not uuid)',
+  // })
+  // @ApiResponse({
+  //   status: 404,
+  //   description: 'Album was not found.',
+  // })
+  // async update(
+  //   @Param(
+  //     'id',
+  //     new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+  //   )
+  //   id: string,
+  //   @Body() updateAlbumDto: UpdateAlbumDto,
+  // ): Promise<Album> {
+  //   return this.albumsService.update(id, updateAlbumDto);
+  // }
 
   @Delete(':id')
   @ApiOperation({

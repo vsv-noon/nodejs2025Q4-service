@@ -1,23 +1,23 @@
 import {
-  forwardRef,
-  Inject,
+  // forwardRef,
+  // Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateTrackDto } from './dto/create-track.dto';
-import { UpdateTrackDto } from './dto/update-track.dto';
+// import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
 import { v4 as uuidv4 } from 'uuid';
-import { FavoritesService } from 'src/favorites/favorites.service';
+// import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class TracksService {
   private tracks: Track[] = [];
 
-  constructor(
-    @Inject(forwardRef(() => FavoritesService))
-    private readonly favoritesService: FavoritesService,
-  ) {}
+  // constructor(
+  //   @Inject(forwardRef(() => FavoritesService))
+  //   private readonly favoritesService: FavoritesService,
+  // ) {}
 
   create(createTrackDto: CreateTrackDto): Track {
     const track = {
@@ -44,20 +44,20 @@ export class TracksService {
     return track;
   }
 
-  update(id: string, updateTrackDto: UpdateTrackDto): Track {
-    const track = this.tracks.find((track) => track.id === id);
+  // update(id: string, updateTrackDto: UpdateTrackDto): Track {
+  //   const track = this.tracks.find((track) => track.id === id);
 
-    if (!track) {
-      throw new NotFoundException(`Track not found`);
-    }
+  //   if (!track) {
+  //     throw new NotFoundException(`Track not found`);
+  //   }
 
-    track.name = updateTrackDto.name;
-    track.artistId = updateTrackDto.artistId;
-    track.albumId = updateTrackDto.albumId;
-    track.duration = updateTrackDto.duration;
+  //   track.name = updateTrackDto.name;
+  //   track.artistId = updateTrackDto.artistId;
+  //   track.albumId = updateTrackDto.albumId;
+  //   track.duration = updateTrackDto.duration;
 
-    return track;
-  }
+  //   return track;
+  // }
 
   remove(id: string): void {
     const track = this.tracks.find((track) => track.id === id);
@@ -66,13 +66,13 @@ export class TracksService {
       throw new NotFoundException('Track not found');
     }
 
-    const favorite = this.favoritesService
-      .findAll()
-      .tracks.find((track) => track.id === id);
+    // const favorite = this.favoritesService
+    //   .findAll()
+    //   .tracks.find((track) => track.id === id);
 
-    if (favorite) {
-      this.favoritesService.removeTrack(id);
-    }
+    // if (favorite) {
+    //   this.favoritesService.removeTrack(id);
+    // }
 
     this.tracks = this.tracks.filter((track) => track.id !== id);
   }
