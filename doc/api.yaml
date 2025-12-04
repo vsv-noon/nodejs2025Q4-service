@@ -324,6 +324,30 @@ paths:
           description: Track not found
       summary: Get single track by id
       tags: *ref_3
+    put:
+      description: Update library track information by UUID
+      operationId: TracksController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTrackDto'
+      responses:
+        '200':
+          description: The track has been updated.
+        '400':
+          description: Bad request. trackId is invalid (not uuid)
+        '404':
+          description: Track was not found.
+      summary: Update track information
+      tags: *ref_3
     delete:
       description: Delete track
       operationId: TracksController_remove
@@ -430,3 +454,14 @@ components:
         - artistId
         - albumId
         - duration
+    UpdateTrackDto:
+      type: object
+      properties:
+        name:
+          type: string
+        artistId:
+          type: string
+        albumId:
+          type: string
+        duration:
+          type: number

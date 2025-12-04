@@ -7,12 +7,12 @@ import {
   Delete,
   ParseUUIDPipe,
   HttpStatus,
-  // Put,
+  Put,
   HttpCode,
 } from '@nestjs/common';
 import { TracksService } from './tracks.service';
 import { CreateTrackDto } from './dto/create-track.dto';
-// import { UpdateTrackDto } from './dto/update-track.dto';
+import { UpdateTrackDto } from './dto/update-track.dto';
 import { Track } from './interfaces/track.interface';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
@@ -32,7 +32,7 @@ export class TracksController {
     description: 'Bad request. body does not contain required fields',
   })
   async create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
-    return this.tracksService.create(createTrackDto);
+    return await this.tracksService.create(createTrackDto);
   }
 
   @Get()
@@ -42,7 +42,7 @@ export class TracksController {
   })
   @ApiResponse({ status: 200, description: 'Successful operation' })
   async findAll(): Promise<Track[]> {
-    return this.tracksService.findAll();
+    return await this.tracksService.findAll();
   }
 
   @Get(':id')
@@ -64,33 +64,33 @@ export class TracksController {
     )
     id: string,
   ): Promise<Track> {
-    return this.tracksService.findOne(id);
+    return await this.tracksService.findOne(id);
   }
 
-  // @Put(':id')
-  // @ApiOperation({
-  //   summary: 'Update track information',
-  //   description: 'Update library track information by UUID',
-  // })
-  // @ApiResponse({ status: 200, description: 'The track has been updated.' })
-  // @ApiResponse({
-  //   status: 400,
-  //   description: 'Bad request. trackId is invalid (not uuid)',
-  // })
-  // @ApiResponse({
-  //   status: 404,
-  //   description: 'Track was not found.',
-  // })
-  // async update(
-  //   @Param(
-  //     'id',
-  //     new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
-  //   )
-  //   id: string,
-  //   @Body() updateTrackDto: UpdateTrackDto,
-  // ): Promise<Track> {
-  //   return this.tracksService.update(id, updateTrackDto);
-  // }
+  @Put(':id')
+  @ApiOperation({
+    summary: 'Update track information',
+    description: 'Update library track information by UUID',
+  })
+  @ApiResponse({ status: 200, description: 'The track has been updated.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request. trackId is invalid (not uuid)',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Track was not found.',
+  })
+  async update(
+    @Param(
+      'id',
+      new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
+    )
+    id: string,
+    @Body() updateTrackDto: UpdateTrackDto,
+  ): Promise<Track> {
+    return await this.tracksService.update(id, updateTrackDto);
+  }
 
   @Delete(':id')
   @ApiOperation({
@@ -114,6 +114,6 @@ export class TracksController {
     )
     id: string,
   ): Promise<void> {
-    return this.tracksService.remove(id);
+    return await this.tracksService.remove(id);
   }
 }
