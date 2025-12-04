@@ -235,6 +235,30 @@ paths:
           description: Album not found
       summary: Get albums list
       tags: *ref_2
+    put:
+      description: Update library album information by UUID
+      operationId: AlbumsController_update
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAlbumDto'
+      responses:
+        '200':
+          description: The album has been updated.
+        '400':
+          description: Bad request. albumId is invalid (not uuid)
+        '404':
+          description: Album was not found.
+      summary: Update album information
+      tags: *ref_2
     delete:
       description: Delete album from library
       operationId: AlbumsController_remove
@@ -381,6 +405,15 @@ components:
         - name
         - year
         - artistId
+    UpdateAlbumDto:
+      type: object
+      properties:
+        name:
+          type: string
+        year:
+          type: number
+        artistId:
+          type: string
     CreateTrackDto:
       type: object
       properties:

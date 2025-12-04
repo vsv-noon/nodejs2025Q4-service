@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { Prisma } from 'generated/prisma/client';
 
 @Injectable()
 export class UsersService {
@@ -19,18 +16,21 @@ export class UsersService {
     const user = await this.prisma.user.create({
       data: {
         ...createUserDto,
+        version: 1,
         createdAt: new Date(),
         updatedAt: new Date(),
       },
     });
 
-    const { password: _, ...rest } = user;
-
-    return {
-      ...rest,
-      createdAt: new Date(rest.createdAt).getTime(),
-      updatedAt: new Date(rest.updatedAt).getTime(),
+    const newUser: Omit<User, 'password'> = {
+      id: user.id,
+      login: user.login,
+      version: 1,
+      createdAt: new Date().getTime(),
+      updatedAt: new Date().getTime(),
     };
+
+    return newUser;
   }
 
   async findAll() {
@@ -66,14 +66,24 @@ export class UsersService {
       throw new ForbiddenException('Old Password is wrong');
     }
 
-    const { password: _, version, ...rest } = user;
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        password: updatePasswordDto.newPassword,
+        version: user.version + 1,
+        updatedAt: new Date(),
+      },
+    });
 
-    return {
-      ...rest,
-      version: version + 1,
-      createdAt: new Date(rest.createdAt).getTime(),
-      updatedAt: new Date(rest.updatedAt).getTime(),
+    const userWithoutPassword: Omit<User, 'password'> = {
+      id: updatedUser.id,
+      login: updatedUser.login,
+      version: updatedUser.version,
+      createdAt: updatedUser.createdAt.getTime(),
+      updatedAt: updatedUser.updatedAt.getTime(),
     };
+
+    return userWithoutPassword;
   }
 
   async remove(id: string): Promise<void> {
