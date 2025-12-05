@@ -13,12 +13,13 @@ export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
+    const timestamp = new Date();
     const user = await this.prisma.user.create({
       data: {
         ...createUserDto,
         version: 1,
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: timestamp,
+        updatedAt: timestamp,
       },
     });
 
@@ -26,16 +27,20 @@ export class UsersService {
       id: user.id,
       login: user.login,
       version: 1,
-      createdAt: new Date().getTime(),
-      updatedAt: new Date().getTime(),
+      createdAt: new Date(user.createdAt).getTime(),
+      updatedAt: new Date(user.createdAt).getTime(),
     };
 
     return newUser;
   }
 
-  async findAll() {
+  async findAll(): Promise<User[]> {
     const users = await this.prisma.user.findMany();
-    return users;
+    return users.map((user) => ({
+      ...user,
+      createdAt: new Date(user.createdAt).getTime(),
+      updatedAt: new Date(user.updatedAt).getTime(),
+    }));
   }
 
   async findOne(id: string): Promise<User> {
@@ -79,8 +84,8 @@ export class UsersService {
       id: updatedUser.id,
       login: updatedUser.login,
       version: updatedUser.version,
-      createdAt: updatedUser.createdAt.getTime(),
-      updatedAt: updatedUser.updatedAt.getTime(),
+      createdAt: new Date(updatedUser.createdAt).getTime(),
+      updatedAt: new Date(updatedUser.createdAt).getTime(),
     };
 
     return userWithoutPassword;

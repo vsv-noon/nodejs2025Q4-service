@@ -13,7 +13,7 @@ model User {
   password  String
   version   Int      @default(1)
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
 }
 
 model Artist {
@@ -22,6 +22,7 @@ model Artist {
   grammy Boolean
   albums Album[] @relation("ArtistAlbums")
   tracks Track[] @relation("ArtistTracks")
+  isFavorite Boolean? @default(false)
 }
 
 model Album {
@@ -31,6 +32,7 @@ model Album {
   artistId String? @unique
   artist   Artist? @relation("ArtistAlbums", fields: [artistId], references: [id], onDelete: SetNull)
   tracks   Track[] @relation("AlbumTracks")
+  isFavorite Boolean? @default(false)
 }
 
 model Track {
@@ -41,4 +43,5 @@ model Track {
   artist   Artist? @relation("ArtistTracks", fields: [artistId], references: [id], onDelete: SetNull)
   albumId  String? @unique
   album    Album?  @relation("AlbumTracks", fields: [albumId], references: [id], onDelete: SetNull)
+  isFavorite Boolean? @default(false)
 }

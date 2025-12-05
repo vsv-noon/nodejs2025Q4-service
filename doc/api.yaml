@@ -366,6 +366,128 @@ paths:
           description: Track was not found.
       summary: Delete track
       tags: *ref_3
+  /favs:
+    get:
+      description: Get all favorites artists, albums and tracks
+      operationId: FavoritesController_findAll
+      parameters: []
+      responses:
+        '200':
+          description: Successful operation
+      summary: Get all favorites
+      tags: &ref_4
+        - Favorites
+  /favs/album/{id}:
+    post:
+      description: Add album to the favorites
+      operationId: FavoritesController_addAlbum
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Added successfully
+        '400':
+          description: Bad. albumId is invalid (not uuid)
+        '422':
+          description: Album was not found.
+      summary: Add album to the favorites
+      tags: *ref_4
+    delete:
+      description: Delete album from favorites
+      operationId: FavoritesController_removeAlbum
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted successfully
+        '400':
+          description: Bad. albumId is invalid (not uuid)
+        '404':
+          description: Album was not found.
+      summary: Delete album from favorites
+      tags: *ref_4
+  /favs/artist/{id}:
+    post:
+      description: Add artist to the favorites
+      operationId: FavoritesController_addArtist
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Added successfully
+        '400':
+          description: Bad. artistId is invalid (not uuid)
+        '422':
+          description: Artist was not found.
+      summary: Add artist to the favorites
+      tags: *ref_4
+    delete:
+      description: Delete artist from favorites
+      operationId: FavoritesController_removeArtist
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted successfully
+        '400':
+          description: Bad. artistId is invalid (not uuid)
+        '404':
+          description: Artist was not found.
+      summary: Delete artist from favorites
+      tags: *ref_4
+  /favs/track/{id}:
+    post:
+      description: Add track to the favorites
+      operationId: FavoritesController_addTrack
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Added successfully
+        '400':
+          description: Bad. trackId is invalid (not uuid)
+        '422':
+          description: Track was not found.
+      summary: Add track to the favorites
+      tags: *ref_4
+    delete:
+      description: Delete track from favorites
+      operationId: FavoritesController_removeTrack
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Deleted successfully
+        '400':
+          description: Bad. trackId is invalid (not uuid)
+        '404':
+          description: Track was not found.
+      summary: Delete track from favorites
+      tags: *ref_4
 info:
   title: REST Service
   description: >-
