@@ -8,7 +8,7 @@
 ## Downloading
 
 ```
-git clone -b rest-service https://github.com/vsv-noon/nodejs2025Q4-service.git
+git clone -b containerization-database-orm https://github.com/vsv-noon/nodejs2025Q4-service.git
 ```
 OR
 ```
@@ -23,13 +23,32 @@ git clone {repository URL}
 npm install
 ```
 
+## ENV file
+
+#### You need to rename `.env.example` to `.env` 
+
+```
+cp .env.example .env
+```
+
+## Run a program in Docker
+
+```
+npm run docker:build
+```
+
+### npm script for vulnerabilities scanning
+```
+npm run docker:scan
+```
+
+
 ## Running application
 
 ```
 npm start
 ```
 
-#### You can rename `.env.example` to `.env` and change the port used (`PORT=4000` as default)
 
 #### After starting the app on port (4000 as default) you can open in your browser OpenAPI documentation by typing **http://localhost:4000/doc/**.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
