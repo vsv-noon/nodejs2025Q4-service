@@ -15,7 +15,7 @@ OR
 git clone {repository URL}
 ```
 
-### switch to branch `rest-service`
+### switch to branch `containerization-database-orm`
 
 ## Installing NPM modules
 
@@ -25,13 +25,13 @@ npm install
 
 ## ENV file
 
-#### You need to rename `.env.example` to `.env` 
+#### Rename `.env.example` to `.env` 
 
 ```
 cp .env.example .env
 ```
 
-## Run a program in Docker
+## Running application in Docker
 
 ```
 npm run docker:build
@@ -42,6 +42,8 @@ npm run docker:build
 npm run docker:scan
 ```
 
+## DockerHub link
+https://hub.docker.com/r/vsvnoon/nodejs2025q4-service-app
 
 ## Running application
 
