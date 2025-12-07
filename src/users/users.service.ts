@@ -1,51 +1,67 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/user.interface';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UsersService {
-  private users: User[] = [];
+  constructor(private readonly prisma: PrismaService) {}
 
-  create(createUserDto: CreateUserDto): Partial<User> {
-    const user: User = {
-      id: uuidv4(),
-      login: createUserDto.login,
-      password: createUserDto.password,
+  async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
+    const timestamp = new Date();
+    const user = await this.prisma.user.create({
+      data: {
+        ...createUserDto,
+        version: 1,
+        createdAt: timestamp,
+        updatedAt: timestamp,
+      },
+    });
+
+    const newUser: Omit<User, 'password'> = {
+      id: user.id,
+      login: user.login,
       version: 1,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
+      createdAt: new Date(user.createdAt).getTime(),
+      updatedAt: new Date(user.createdAt).getTime(),
     };
 
-    this.users.push(user);
-
-    const { password, ...rest } = user;
-
-    return rest;
+    return newUser;
   }
 
-  findAll(): User[] {
-    return this.users;
+  async findAll(): Promise<User[]> {
+    const users = await this.prisma.user.findMany();
+    return users.map((user) => ({
+      ...user,
+      createdAt: new Date(user.createdAt).getTime(),
+      updatedAt: new Date(user.updatedAt).getTime(),
+    }));
   }
 
-  findOne(id: string): User {
-    const user = this.users.find((user) => user.id === id);
+  async findOne(id: string): Promise<User> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    return user;
+    return {
+      ...user,
+      createdAt: new Date(user.createdAt).getTime(),
+      updatedAt: new Date(user.updatedAt).getTime(),
+    };
   }
 
-  update(id: string, updatePasswordDto: UpdatePasswordDto): Partial<User> {
-    const user = this.users.find((user) => user.id === id);
+  async update(
+    id: string,
+    updatePasswordDto: UpdatePasswordDto,
+  ): Promise<Partial<User>> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
       throw new NotFoundException('User not found');
@@ -55,21 +71,33 @@ export class UsersService {
       throw new ForbiddenException('Old Password is wrong');
     }
 
-    user.password = updatePasswordDto.newPassword;
-    user.updatedAt = Date.now();
-    user.version += 1;
+    const updatedUser = await this.prisma.user.update({
+      where: { id },
+      data: {
+        password: updatePasswordDto.newPassword,
+        version: user.version + 1,
+        updatedAt: new Date(),
+      },
+    });
 
-    const { password, ...rest } = user;
-    return rest;
+    const userWithoutPassword: Omit<User, 'password'> = {
+      id: updatedUser.id,
+      login: updatedUser.login,
+      version: updatedUser.version,
+      createdAt: new Date(updatedUser.createdAt).getTime(),
+      updatedAt: new Date(updatedUser.createdAt).getTime(),
+    };
+
+    return userWithoutPassword;
   }
 
-  remove(id: string): void {
-    const user = this.users.find((user) => user.id === id);
+  async remove(id: string): Promise<void> {
+    const user = await this.prisma.user.findUnique({ where: { id } });
 
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    this.users = this.users.filter((user) => user.id !== id);
+    await this.prisma.user.delete({ where: { id } });
   }
 }

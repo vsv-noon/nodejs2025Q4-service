@@ -26,7 +26,7 @@ export class FavoritesController {
   })
   @ApiResponse({ status: 200, description: 'Successful operation' })
   async findAll() {
-    return this.favoritesService.findAll();
+    return await this.favoritesService.findAll();
   }
 
   @Post('album/:id')
@@ -50,7 +50,7 @@ export class FavoritesController {
     )
     id: string,
   ): Promise<Album> {
-    return this.favoritesService.addAlbum(id);
+    return await this.favoritesService.addAlbum(id);
   }
 
   @Delete('album/:id')
@@ -74,8 +74,8 @@ export class FavoritesController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
-  ): Promise<void> {
-    return this.favoritesService.removeAlbum(id);
+  ): Promise<Album> {
+    return await this.favoritesService.removeAlbum(id);
   }
 
   @Post('artist/:id')
@@ -99,7 +99,7 @@ export class FavoritesController {
     )
     id: string,
   ): Promise<Artist> {
-    return this.favoritesService.addArtist(id);
+    return await this.favoritesService.addArtist(id);
   }
 
   @Delete('artist/:id')
@@ -123,8 +123,8 @@ export class FavoritesController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
-  ): Promise<void> {
-    return this.favoritesService.removeArtist(id);
+  ): Promise<Artist> {
+    return await this.favoritesService.removeArtist(id);
   }
 
   @Post('track/:id')
@@ -148,7 +148,7 @@ export class FavoritesController {
     )
     id: string,
   ): Promise<Track> {
-    return this.favoritesService.addTrack(id);
+    return await this.favoritesService.addTrack(id);
   }
 
   @Delete('track/:id')
@@ -172,7 +172,7 @@ export class FavoritesController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
-  ): Promise<void> {
-    return this.favoritesService.removeTrack(id);
+  ): Promise<Track> {
+    return await this.favoritesService.removeTrack(id);
   }
 }

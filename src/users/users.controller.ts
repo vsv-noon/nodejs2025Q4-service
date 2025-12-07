@@ -13,8 +13,8 @@ import {
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { User } from './interfaces/user.interface';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { User } from './interfaces/user.interface';
 
 @ApiTags('User')
 @Controller('user')
@@ -32,7 +32,7 @@ export class UsersController {
     description: 'Bad request. body does not contain required fields',
   })
   async create(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
-    return this.userService.create(createUserDto);
+    return await this.userService.create(createUserDto);
   }
 
   @Get()
@@ -41,8 +41,8 @@ export class UsersController {
     description: 'Gets all users',
   })
   @ApiResponse({ status: 200, description: 'Successful operation' })
-  async findAll(): Promise<User[]> {
-    return this.userService.findAll();
+  async findAll() {
+    return await this.userService.findAll();
   }
 
   @Get(':id')
@@ -64,7 +64,7 @@ export class UsersController {
     )
     id: string,
   ): Promise<User> {
-    return this.userService.findOne(id);
+    return await this.userService.findOne(id);
   }
 
   @Put(':id')
@@ -93,7 +93,7 @@ export class UsersController {
     id: string,
     @Body() updatePasswordDto: UpdatePasswordDto,
   ): Promise<Partial<User>> {
-    return this.userService.update(id, updatePasswordDto);
+    return await this.userService.update(id, updatePasswordDto);
   }
 
   @Delete(':id')
@@ -118,6 +118,6 @@ export class UsersController {
     )
     id: string,
   ): Promise<void> {
-    this.userService.remove(id);
+    await this.userService.remove(id);
   }
 }

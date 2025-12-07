@@ -32,7 +32,7 @@ export class TracksController {
     description: 'Bad request. body does not contain required fields',
   })
   async create(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
-    return this.tracksService.create(createTrackDto);
+    return await this.tracksService.create(createTrackDto);
   }
 
   @Get()
@@ -42,7 +42,7 @@ export class TracksController {
   })
   @ApiResponse({ status: 200, description: 'Successful operation' })
   async findAll(): Promise<Track[]> {
-    return this.tracksService.findAll();
+    return await this.tracksService.findAll();
   }
 
   @Get(':id')
@@ -64,7 +64,7 @@ export class TracksController {
     )
     id: string,
   ): Promise<Track> {
-    return this.tracksService.findOne(id);
+    return await this.tracksService.findOne(id);
   }
 
   @Put(':id')
@@ -89,7 +89,7 @@ export class TracksController {
     id: string,
     @Body() updateTrackDto: UpdateTrackDto,
   ): Promise<Track> {
-    return this.tracksService.update(id, updateTrackDto);
+    return await this.tracksService.update(id, updateTrackDto);
   }
 
   @Delete(':id')
@@ -114,6 +114,6 @@ export class TracksController {
     )
     id: string,
   ): Promise<void> {
-    return this.tracksService.remove(id);
+    return await this.tracksService.remove(id);
   }
 }

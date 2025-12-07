@@ -8,14 +8,21 @@
 ## Downloading
 
 ```
-git clone -b rest-service https://github.com/vsv-noon/nodejs2025Q4-service.git
+git clone -b containerization-database-orm https://github.com/vsv-noon/nodejs2025Q4-service.git
 ```
 OR
 ```
 git clone {repository URL}
 ```
+### switch to dir `nodejs2025Q4-service`
+```
+cd nodejs2025Q4-service
+```
 
-### switch to branch `rest-service`
+### switch to branch `containerization-database-orm`
+```
+git checkout containerization-database-orm
+```
 
 ## Installing NPM modules
 
@@ -23,13 +30,34 @@ git clone {repository URL}
 npm install
 ```
 
+## ENV file
+
+#### You need to rename `.env.example` to `.env` 
+
+```
+cp .env.example .env
+```
+
+## Running application in Docker
+
+```
+npm run docker:build
+```
+
+### npm script for vulnerabilities scanning
+```
+npm run docker:scan
+```
+
+## DockerHub link
+https://hub.docker.com/r/vsvnoon/nodejs2025q4-service-app
+
 ## Running application
 
 ```
 npm start
 ```
 
-#### You can rename `.env.example` to `.env` and change the port used (`PORT=4000` as default)
 
 #### After starting the app on port (4000 as default) you can open in your browser OpenAPI documentation by typing **http://localhost:4000/doc/**.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
@@ -65,6 +93,22 @@ To run only specific test suite with authorization
 
 ```
 npm run test:auth -- <path to suite>
+```
+
+
+## Testing in Docker
+
+Before running tests, you need to run the application.
+```
+npm run docker:build
+```
+
+After application running open new terminal and enter:
+
+To run all tests without authorization
+
+```
+docker exec home-library-app npm run test
 ```
 
 ### Auto-fix and format
