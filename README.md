@@ -14,8 +14,15 @@ OR
 ```
 git clone {repository URL}
 ```
+### switch to dir `nodejs2025Q4-service`
+```
+cd nodejs2025Q4-service
+```
 
 ### switch to branch `containerization-database-orm`
+```
+git checkout containerization-database-orm
+```
 
 ## Installing NPM modules
 
@@ -25,7 +32,7 @@ npm install
 
 ## ENV file
 
-#### Rename `.env.example` to `.env` 
+#### You need to rename `.env.example` to `.env` 
 
 ```
 cp .env.example .env
@@ -86,6 +93,22 @@ To run only specific test suite with authorization
 
 ```
 npm run test:auth -- <path to suite>
+```
+
+
+## Testing in Docker
+
+Before running tests, you need to run the application.
+```
+npm run docker:build
+```
+
+After application running open new terminal and enter:
+
+To run all tests without authorization
+
+```
+docker exec home-library-app npm run test
 ```
 
 ### Auto-fix and format
