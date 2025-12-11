@@ -8,6 +8,7 @@ import { TracksModule } from './tracks/tracks.module';
 import { FavoritesModule } from './favorites/favorites.module';
 import { ConfigModule } from '@nestjs/config';
 import { PrismaModule } from './prisma/prisma.module';
+import { HashModule } from './hash/hash.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { PrismaModule } from './prisma/prisma.module';
     FavoritesModule,
     ConfigModule.forRoot({ isGlobal: true }),
     PrismaModule,
+    HashModule,
   ],
   controllers: [AppController],
   providers: [AppService],

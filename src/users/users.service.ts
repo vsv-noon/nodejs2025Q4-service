@@ -7,16 +7,24 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { User } from './interfaces/user.interface';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { HashService } from 'src/hash/hash.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly hashService: HashService,
+  ) {}
 
   async create(createUserDto: CreateUserDto): Promise<Partial<User>> {
     const timestamp = new Date();
+    const password = await this.hashService.hashPassword(
+      createUserDto.password,
+    );
     const user = await this.prisma.user.create({
       data: {
-        ...createUserDto,
+        login: createUserDto.login,
+        password: password,
         version: 1,
         createdAt: timestamp,
         updatedAt: timestamp,
@@ -67,14 +75,23 @@ export class UsersService {
       throw new NotFoundException('User not found');
     }
 
-    if (updatePasswordDto.oldPassword !== user.password) {
+    const passwordIsMatch = await this.hashService.comparePassword(
+      updatePasswordDto.oldPassword,
+      user.password,
+    );
+
+    if (!passwordIsMatch) {
       throw new ForbiddenException('Old Password is wrong');
     }
+
+    const newPassword = await this.hashService.hashPassword(
+      updatePasswordDto.newPassword,
+    );
 
     const updatedUser = await this.prisma.user.update({
       where: { id },
       data: {
-        password: updatePasswordDto.newPassword,
+        password: newPassword,
         version: user.version + 1,
         updatedAt: new Date(),
       },
