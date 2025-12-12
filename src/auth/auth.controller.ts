@@ -9,6 +9,7 @@ import {
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
+import { RefreshDto } from './dto/refresh.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -27,6 +28,19 @@ export class AuthController {
     const tokens = await this.authService.login(loginDto);
     if (!tokens) {
       throw new UnauthorizedException('Invalid credentials');
+    }
+    return tokens;
+  }
+
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  async refresh(@Body() dto: RefreshDto) {
+    if (!dto.refreshToken) {
+      throw new UnauthorizedException('Refresh token is required');
+    }
+    const tokens = await this.authService.refreshToken(dto.refreshToken);
+    if (!tokens) {
+      throw new UnauthorizedException('Invalid refresh token');
     }
     return tokens;
   }

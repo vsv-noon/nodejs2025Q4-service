@@ -17,6 +17,10 @@ import { JwtStrategy } from './jwt.strategy';
       secret: process.env.JWT_SECRET_KEY,
       signOptions: { expiresIn: process.env.TOKEN_EXPIRE_TIME },
     }),
+    JwtModule.register({
+      secret: process.env.JWT_SECRET_REFRESH_KEY,
+      signOptions: { expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME },
+    }),
     forwardRef(() => UsersModule),
   ],
   controllers: [AuthController],

@@ -1,4 +1,5 @@
 import {
+  ForbiddenException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
@@ -24,8 +25,6 @@ export class AuthService {
     const newUser = await this.usersService.create({
       ...createUserDto,
     });
-
-    console.log('New User');
 
     return newUser;
   }
@@ -53,14 +52,55 @@ export class AuthService {
       login: user.login,
     };
 
-    const secret = process.env.JWT_SECRET;
-    const expiresIn = process.env.TOKEN_EXPIRE_TIME;
-
     const accessToken = await this.jwtService.signAsync(payload, {
-      secret,
-      expiresIn,
+      secret: process.env.JWT_SECRET_KEY,
+      expiresIn: process.env.TOKEN_EXPIRE_TIME,
     });
 
-    return { accessToken };
+    const refreshToken = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET_REFRESH_KEY,
+      expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+    });
+
+    return { accessToken, refreshToken };
+  }
+
+  async refreshToken(refreshToken: string) {
+    try {
+      if (!refreshToken) {
+        throw new UnauthorizedException('No refresh token provided');
+      }
+
+      const { userId } = await this.jwtService.verify(refreshToken, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+      });
+
+      const user = await this.usersService.findOne(userId);
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const payload = {
+        login: user.login,
+        userId: user.id,
+      };
+
+      const newAccessToken = await this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET_KEY,
+        expiresIn: process.env.TOKEN_EXPIRE_TIME,
+      });
+
+      const newRefreshToken = await this.jwtService.signAsync(payload, {
+        secret: process.env.JWT_SECRET_REFRESH_KEY,
+        expiresIn: process.env.TOKEN_REFRESH_EXPIRE_TIME,
+      });
+
+      return {
+        accessToken: newAccessToken,
+        refreshToken: newRefreshToken,
+      };
+    } catch (error) {
+      throw new ForbiddenException('Invalid or expired refresh token');
+    }
   }
 }
