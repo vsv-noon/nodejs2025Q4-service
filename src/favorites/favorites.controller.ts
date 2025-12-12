@@ -7,12 +7,19 @@ import {
   HttpCode,
   ParseUUIDPipe,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import { Album } from 'src/albums/interfaces/album.interface';
 import { Track } from 'src/tracks/interfaces/track.interface';
 import { Artist } from 'src/artists/interfaces/artist.interface';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Favorites')
 @Controller('favs')
@@ -20,6 +27,8 @@ export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get all favorites',
     description: 'Get all favorites artists, albums and tracks',
@@ -30,6 +39,8 @@ export class FavoritesController {
   }
 
   @Post('album/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Add album to the favorites',
     description: 'Add album to the favorites',
@@ -54,6 +65,8 @@ export class FavoritesController {
   }
 
   @Delete('album/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Delete album from favorites',
     description: 'Delete album from favorites',
@@ -79,6 +92,8 @@ export class FavoritesController {
   }
 
   @Post('artist/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Add artist to the favorites',
     description: 'Add artist to the favorites',
@@ -103,6 +118,8 @@ export class FavoritesController {
   }
 
   @Delete('artist/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Delete artist from favorites',
     description: 'Delete artist from favorites',
@@ -128,6 +145,8 @@ export class FavoritesController {
   }
 
   @Post('track/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Add track to the favorites',
     description: 'Add track to the favorites',
@@ -152,6 +171,8 @@ export class FavoritesController {
   }
 
   @Delete('track/:id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Delete track from favorites',
     description: 'Delete track from favorites',

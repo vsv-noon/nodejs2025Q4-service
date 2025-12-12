@@ -36,7 +36,7 @@ export class UsersService {
       login: user.login,
       version: 1,
       createdAt: new Date(user.createdAt).getTime(),
-      updatedAt: new Date(user.createdAt).getTime(),
+      updatedAt: new Date(user.updatedAt).getTime(),
     };
 
     return newUser;
