@@ -5,15 +5,28 @@ import {
   HttpCode,
   HttpStatus,
   UnauthorizedException,
+  Get,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/auth.dto';
 import { ApiOkResponse } from '@nestjs/swagger';
 import { RefreshDto } from './dto/refresh.dto';
+import { Public } from './decorators/public.decorator';
 
+@Public()
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
+
+  @Get('signup')
+  getSignup() {
+    return this.authService.getSignup();
+  }
+
+  @Get('login')
+  getLogin() {
+    return this.authService.getLogin();
+  }
 
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)

@@ -21,6 +21,14 @@ export class AuthService {
     private readonly hash: HashService,
   ) {}
 
+  getSignup() {
+    return 'Welcome to auth/signup';
+  }
+
+  getLogin() {
+    return 'Welcome to auth/login';
+  }
+
   async signUp(createUserDto: CreateUserDto) {
     const newUser = await this.usersService.create({
       ...createUserDto,

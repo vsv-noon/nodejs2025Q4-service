@@ -11,9 +11,10 @@ import { PrismaModule } from './prisma/prisma.module';
 import { HashModule } from './hash/hash.module';
 import { AuthModule } from './auth/auth.module';
 import { LoggingModule } from './logging/logging.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD } from '@nestjs/core';
 import { AllExceptionsFilter } from './logging/all-exceptions.filter';
 import { RequestLoggerMiddleware } from './logging/request-logger.middleware';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -34,6 +35,10 @@ import { RequestLoggerMiddleware } from './logging/request-logger.middleware';
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
     },
   ],
 })
