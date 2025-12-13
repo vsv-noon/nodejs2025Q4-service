@@ -1,6 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response, NextFunction } from 'express';
 import { LoggingService } from './logging.service';
+import { sanitizeObject } from './sanitize.util';
 
 @Injectable()
 export class RequestLoggerMiddleware implements NestMiddleware {
@@ -12,8 +13,8 @@ export class RequestLoggerMiddleware implements NestMiddleware {
     this.logger.info('Incoming request', {
       method: req.method,
       url: req.originalUrl,
-      query: req.query,
-      body: req.body,
+      query: sanitizeObject(req.query),
+      body: sanitizeObject(req.body),
     });
 
     res.on('finish', () => {
