@@ -5,11 +5,26 @@ import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as fs from 'node:fs';
 import * as yaml from 'js-yaml';
+import { LoggingService } from './logging/logging.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const port = configService.get<number>('PORT') || 4000;
+  const logger = app.get(LoggingService);
+
+  process.on('uncaughtException', (err) => {
+    logger.error('uncaughtException', {
+      message: err.message,
+      stack: err.stack,
+    });
+    process.exit(1);
+  });
+
+  process.on('unhandledRejection', (reason) => {
+    logger.error('unhandledRejection', { reason });
+    process.exit(1);
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({
