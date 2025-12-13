@@ -77,7 +77,7 @@ export class UsersController {
       new ParseUUIDPipe({ errorHttpStatusCode: HttpStatus.BAD_REQUEST }),
     )
     id: string,
-  ): Promise<User> {
+  ): Promise<Partial<User>> {
     return await this.userService.findOne(id);
   }
 
