@@ -7,26 +7,26 @@
 
 ## Downloading
 
-```
+```bash
 git clone -b containerization-database-orm https://github.com/vsv-noon/nodejs2025Q4-service.git
 ```
 OR
-```
+```bash
 git clone {repository URL}
 ```
 ### switch to dir `nodejs2025Q4-service`
-```
+```bash
 cd nodejs2025Q4-service
 ```
 
 ### switch to branch `containerization-database-orm`
-```
+```bash
 git checkout containerization-database-orm
 ```
 
 ## Installing NPM modules
 
-```
+```bash
 npm install
 ```
 
@@ -34,18 +34,18 @@ npm install
 
 #### You need to rename `.env.example` to `.env` 
 
-```
+```bash
 cp .env.example .env
 ```
 
 ## Running application in Docker
 
-```
+```bash
 npm run docker:build
 ```
 
 ### npm script for vulnerabilities scanning
-```
+```bash
 npm run docker:scan
 ```
 
@@ -54,7 +54,7 @@ https://hub.docker.com/r/vsvnoon/nodejs2025q4-service-app
 
 ## Running application
 
-```
+```bash
 npm start
 ```
 
@@ -65,33 +65,22 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 ## Testing
 
 Before running tests, you need to run the application.
-```
+```bash
 npm start
 ```
 
 After application running open new terminal and enter:
 
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
 
 To run all test with authorization
 
-```
+```bash
 npm run test:auth
 ```
 
 To run only specific test suite with authorization
 
-```
+```bash
 npm run test:auth -- <path to suite>
 ```
 
@@ -99,25 +88,32 @@ npm run test:auth -- <path to suite>
 ## Testing in Docker
 
 Before running tests, you need to run the application.
-```
+```bash
 npm run docker:build
 ```
 
 After application running open new terminal and enter:
 
-To run all tests without authorization
+To run all tests with authorization
 
+```bash
+docker exec home-library-app npm run test:auth
 ```
-docker exec home-library-app npm run test
+
+### View logs written to the file
+```bash
+docker exec home-library-app cat /app/logs/app.log
 ```
+OR
+`docker exec -it home-library-app sh` `cd logs`
 
 ### Auto-fix and format
 
-```
+```bash
 npm run lint
 ```
 
-```
+```bash
 npm run format
 ```
 
@@ -126,3 +122,4 @@ npm run format
 Press <kbd>F5</kbd> to debug.
 
 For more information, visit: https://code.visualstudio.com/docs/editor/debugging
+

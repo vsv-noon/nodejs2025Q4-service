@@ -9,12 +9,20 @@ import {
   HttpStatus,
   Put,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { AlbumsService } from './albums.service';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
 import { Album } from './interfaces/album.interface';
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiParam,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @ApiTags('Album')
 @Controller('album')
@@ -22,6 +30,8 @@ export class AlbumsController {
   constructor(private readonly albumsService: AlbumsService) {}
 
   @Post()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Add new album',
     description: 'Add new album information',
@@ -36,6 +46,8 @@ export class AlbumsController {
   }
 
   @Get()
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Get albums list',
     description: 'Gets all library albums list',
@@ -46,6 +58,8 @@ export class AlbumsController {
   }
 
   @Get(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Get albums list' })
   @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 200, description: 'Successful operation' })
@@ -65,6 +79,8 @@ export class AlbumsController {
   }
 
   @Put(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Update album information',
     description: 'Update library album information by UUID',
@@ -90,6 +106,8 @@ export class AlbumsController {
   }
 
   @Delete(':id')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
   @ApiOperation({
     summary: 'Delete album',
     description: 'Delete album from library',
